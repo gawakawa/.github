@@ -7,6 +7,18 @@ on:
         description: "Enable auto-merge on the PR"
         type: boolean
         required: true
+      path-to-flake-dir:
+        description: "Path to the flake directory"
+        type: string
+        required: false
+      pr-title:
+        description: "PR title"
+        type: string
+        required: false
+      branch:
+        description: "Branch name"
+        type: string
+        required: false
     secrets:
       GH_TOKEN:
         required: true
@@ -24,6 +36,9 @@ permissions:
 #       uses: gawakawa/.github/.github/workflows/update-flake-lock.yml@main
 #       with:
 #         auto-merge: true  # required: true or false
+#         path-to-flake-dir: "."  # optional: path to flake directory
+#         pr-title: "⬆️ Update flake.lock"  # optional: PR title
+#         branch: "update_flake_lock_action"  # optional: branch name
 #       secrets:
 #         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
@@ -44,6 +59,9 @@ jobs:
         uses: DeterminateSystems/update-flake-lock@main
         with:
           token: ${{ secrets.GH_TOKEN }}
+          path-to-flake-dir: ${{ inputs.path-to-flake-dir }}
+          pr-title: ${{ inputs.pr-title }}
+          branch: ${{ inputs.branch }}
 
       - name: Enable auto-merge
         if: ${{ steps.update.outputs.pull-request-number && (inputs.auto-merge == true || github.event_name != 'workflow_call') }}
