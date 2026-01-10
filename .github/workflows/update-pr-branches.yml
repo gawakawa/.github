@@ -10,6 +10,17 @@ permissions:
   contents: write
   pull-requests: write
 
+# Usage (from another repository):
+#   permissions:
+#     contents: write
+#     pull-requests: write
+#
+#   jobs:
+#     update-prs:
+#       uses: gawakawa/.github/.github/workflows/update-pr-branches.yml@main
+#       secrets:
+#         GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
 jobs:
   update-prs:
     runs-on: ubuntu-latest
