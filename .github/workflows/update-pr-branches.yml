@@ -24,6 +24,7 @@ permissions:
 jobs:
   update-prs:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: List open PRs
         id: list-prs
