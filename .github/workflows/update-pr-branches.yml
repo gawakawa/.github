@@ -2,15 +2,14 @@ name: Update PR Branches
 
 on:
   workflow_call:
-    secrets:
-      GH_TOKEN:
-        required: true
 
 permissions:
   contents: write
   pull-requests: write
 
 # Usage (from another repository):
+#   Note: pr-branch-updater GitHub App must be installed on the caller repository
+#
 #   permissions:
 #     contents: write
 #     pull-requests: write
@@ -18,19 +17,24 @@ permissions:
 #   jobs:
 #     update-prs:
 #       uses: gawakawa/.github/.github/workflows/update-pr-branches.yml@main
-#       secrets:
-#         GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   update-prs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
+        with:
+          app-id: ${{ secrets.PR_BRANCH_UPDATER_APP_ID }}
+          private-key: ${{ secrets.PR_BRANCH_UPDATER_PRIVATE_KEY }}
+
       - name: List open PRs
         id: list-prs
         run: echo "prs=$(gh pr list --repo "${{ github.repository }}" --state open --json number -q '[.[].number] | join(" ")')" >> "$GITHUB_OUTPUT"
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
 
       - name: Update PR branches
         run: |
@@ -38,4 +42,4 @@ jobs:
             gh pr update-branch "$pr" --repo "${{ github.repository }}" || true
           done
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
