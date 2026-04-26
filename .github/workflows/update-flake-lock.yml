@@ -19,6 +19,11 @@ on:
         description: "Branch name"
         type: string
         required: true
+    secrets:
+      BOT_APP_ID:
+        required: true
+      BOT_PRIVATE_KEY:
+        required: true
 
 permissions:
   contents: write
@@ -39,6 +44,9 @@ permissions:
 #         path-to-flake-dir: "."  # optional: path to flake directory
 #         pr-title: "⬆️ Update flake.lock"  # optional: PR title
 #         branch: "update_flake_lock_action"  # required: branch name
+#       secrets:
+#         BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+#         BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
 
 jobs:
   update-flake-lock:
