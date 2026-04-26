@@ -8,7 +8,7 @@ permissions:
   pull-requests: write
 
 # Usage (from another repository):
-#   Note: pr-branch-updater GitHub App must be installed on the caller repository
+#   Note: gawakawa-bot GitHub App must be installed on the caller repository
 #
 #   permissions:
 #     contents: write
@@ -27,8 +27,8 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         with:
-          app-id: ${{ secrets.PR_BRANCH_UPDATER_APP_ID }}
-          private-key: ${{ secrets.PR_BRANCH_UPDATER_PRIVATE_KEY }}
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: List open PRs
         id: list-prs
