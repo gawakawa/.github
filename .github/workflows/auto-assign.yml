@@ -1,0 +1,45 @@
+name: Auto Assign
+
+on:
+  workflow_call:
+    secrets:
+      BOT_APP_ID:
+        required: true
+      BOT_PRIVATE_KEY:
+        required: true
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+# Usage (from another repository):
+#   Note: gawakawa-bot GitHub App must be installed on the caller repository
+#
+#   permissions:
+#     pull-requests: write
+#
+#   jobs:
+#     auto-assign:
+#       uses: gawakawa/.github/.github/workflows/auto-assign.yml@main
+#       secrets:
+#         BOT_APP_ID: ${{ secrets.BOT_APP_ID }}
+#         BOT_PRIVATE_KEY: ${{ secrets.BOT_PRIVATE_KEY }}
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Generate GitHub App Token
+        id: app-token
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
+        with:
+          app-id: ${{ secrets.BOT_APP_ID }}
+          private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Assign PR author
+        run: gh pr edit "$PR_URL" --add-assignee "$PR_AUTHOR"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_AUTHOR: ${{ github.event.pull_request.user.login }}
+          GH_TOKEN: ${{ steps.app-token.outputs.token }}
