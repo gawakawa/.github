@@ -64,6 +64,8 @@ jobs:
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
       - name: Install Nix
         uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3 # v31.10.6
@@ -81,6 +83,7 @@ jobs:
 
       - name: Enable auto-merge
         if: ${{ steps.update.outputs.pull-request-number && inputs.auto-merge == true }}
-        run: gh pr merge --auto --merge ${{ steps.update.outputs.pull-request-number }}
+        run: gh pr merge --auto --merge "$PR_NUMBER"
         env:
+          PR_NUMBER: ${{ steps.update.outputs.pull-request-number }}
           GH_TOKEN: ${{ steps.app-token.outputs.token }}

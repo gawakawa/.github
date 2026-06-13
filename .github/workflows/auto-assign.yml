@@ -36,6 +36,7 @@ jobs:
         with:
           app-id: ${{ secrets.BOT_APP_ID }}
           private-key: ${{ secrets.BOT_PRIVATE_KEY }}
+          permission-pull-requests: write
 
       - name: Assign PR author
         run: gh pr edit "$PR_URL" --add-assignee "$PR_AUTHOR"
