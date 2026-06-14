@@ -36,7 +36,7 @@ permissions:
 
 jobs:
   claude-review:
-    if: github.event.pull_request.author_association == 'OWNER'
+    if: github.event.pull_request.author_association == 'OWNER' && !github.event.pull_request.draft
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
